@@ -8,56 +8,50 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Scaffold(
-        body: TextInputWidget(),
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          key: const Key('goToDetailButton'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const DetailScreen(message: "Hello from HomeScreen"),
+              ),
+            );
+          },
+          child: const Text('Go to Detail'),
+        ),
       ),
     );
   }
 }
 
-class TextInputWidget extends StatefulWidget {
-  const TextInputWidget({super.key});
+class DetailScreen extends StatelessWidget {
+  final String message;
 
-  @override
-  State<TextInputWidget> createState() => _TextInputWidgetState();
-}
-
-class _TextInputWidgetState extends State<TextInputWidget> {
-  final controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    controller.addListener(() => setState(() {}));
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+  const DetailScreen({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          TextField(
-            key: const Key('inputField'),
-            controller: controller,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Escribe algo',
-            ),
-          ),
-          const SizedBox(height: 15),
-          Text(
-            controller.text,
-            key: const Key('liveText'),
-            style: const TextStyle(fontSize: 14),
-          ),
-        ]),
+    return Scaffold(
+      body: Center(
+        child: Text(
+          message,
+          key: const Key('messageText'),
+          style: const TextStyle(fontSize: 20),
+        ),
       ),
     );
   }

@@ -7,78 +7,62 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: MiniFormWidget(),
+    return MaterialApp(
+      routes: {
+        '/': (context) => const HomeScreen(),
+        '/details': (context) =>
+            const DetailScreen(message: 'Named Route'), // ruta nombrada
+      },
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          key: const Key('goToDetailButton'),
+          onPressed: () {
+            Navigator.pushNamed(context, '/details');
+          },
+          child: const Text('Go to Detail'),
         ),
       ),
     );
   }
 }
 
-class MiniFormWidget extends StatefulWidget {
-  const MiniFormWidget({super.key});
+class DetailScreen extends StatelessWidget {
+  final String message;
 
-  @override
-  State<MiniFormWidget> createState() => _MiniFormWidgetState();
-}
-
-class _MiniFormWidgetState extends State<MiniFormWidget> {
-  final TextEditingController _nameController = TextEditingController();
-  bool _agreedToTerms = false;
-
-  void _submitForm() {
-    if (_nameController.text.isNotEmpty && _agreedToTerms) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Form submitted successfully!')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please complete all fields.')),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
+  const DetailScreen({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            key: const Key('nameField'),
-            controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              message,
+              key: const Key('messageText'),
+              style: const TextStyle(fontSize: 20),
             ),
-          ),
-          const SizedBox(height: 15),
-          CheckboxListTile(
-            key: const Key('formCheckbox'),
-            title: const Text('Agree to Terms'),
-            value: _agreedToTerms,
-            onChanged: (value) {
-              setState(() {
-                _agreedToTerms = value ?? false;
-              });
-            },
-          ),
-          const SizedBox(height: 15),
-          ElevatedButton(
-            key: const Key('submitButton'),
-            onPressed: _submitForm,
-            child: const Text('Submit'),
-          ),
-        ],
+            const SizedBox(height: 20),
+            ElevatedButton(
+              key: const Key('backButton'),
+              onPressed: () {
+                Navigator.pop(context); // vuelve a HomeScreen
+              },
+              child: const Text('Go Back'),
+            ),
+          ],
+        ),
       ),
     );
   }
